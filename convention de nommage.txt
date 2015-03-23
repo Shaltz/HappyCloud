@@ -1,0 +1,11 @@
+Convention de nommage
+
+Tout en anglais
+
+entite/table :  _ to separate words 
+				Premier caractere en majuscule
+				key auto increment serial ID_< nom de la table >
+				Mot au singulier
+attribut : _ to separate words
+
+association : verbe infinitif anglais

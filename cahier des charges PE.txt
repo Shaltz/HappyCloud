@@ -1,0 +1,43 @@
+	Definitions des besoins du client pour la base de données
+
+- La DB permet de gérer le téléchargement de jeux sur ipad depuis Internet.
+- Le SGBD doit être PostgreSQL
+- L'utilisation de la DB se fera au travers d'un site web/interface web
+- L'utilisation de la base par les users/admins Organisation sera en read only
+- L'activité de création et de modification de la DB sera loggé (admin Plateforme uniquement)
+- Un script de création de la DB, des tables et des champs sera à fournir au client.
+
+Les entités :
+
+- Users :
+	- Nom
+	- Prenom
+	- Email (login)
+	- Password
+	- Niveau d'accréditation ( admin plateforme, admin organisation, user)
+	- Token d'identification
+	- Organisation
+
+- Jeux :
+	- Nom
+	- Version
+	- ShortName
+	- Path du repertoire ( ou d'un ensemble de fichier)
+	- Metadata depuis fichier JSON
+
+- Organisation :
+	- Nom
+	- Email
+	- Jeux
+
+- Historique de connexion :
+	- Qui c'est connecté
+	- Quand c'est il connecteé
+	- Comment c'est il connecté (PC ou IPAD)
+	- Qu' a t il téléchargé
+
+- Historique d'activité de création / modification :
+	- Qui à modifier
+	- Quoi à été modifié
+- Quand ca a été modifié
+
