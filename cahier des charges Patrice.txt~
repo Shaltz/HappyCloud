@@ -45,7 +45,6 @@ Quand on se connecte la liste des jeux disponibles par rapport au compte. Le jeu
 
 Sur les ipad il y a des jeux téléchargés. Certains jeux sont possédés par le compte d'autres non. L'ipad est utilisé par une organisation ( pour des raisons logistiques car tous les jeux ne sont pas installés sur chaques ipads)
 
-
 CAS D'UTILISATION
 
  Un user account admin peut modifier les account de son organisation ( non necessite de connaitre la personne qui a mofifié)
@@ -56,27 +55,21 @@ CAS D'UTILISATION
 REGLE DE GESTION
 
 Aucun
+-2 comptes ne peuvent pas etre log en meme temps // 'connecter' 'deconnecter'?
+ 2 utilisateurs en meme temps sur le meme IPAD
 
-
-- Tous les jeux et ( toutes leurs dernieres versions ) ne sont pas installés automatiquement sur les IPAD ce sont les utilisateurs  qui le feront.
-
+- Tous les jeux et ( toutes leurs dernieres versions ) ne sont pas installés automatiquement sur les IPAD ce sont les utilisateurs ( admin ) qui le feront.
 
 - Une organisation
 
-
 QUESTION QUE JE ME POSE
-
 Tous les userAccount d'une meme orga ont ils acces au meme jeux qui a été acquis par l'oganisation
 Un device peut il etre utilise par d'autres organisation ?
 Le  jeu a été dl par qui sur quel device?
 
-
 QUESTION A POSER
-On se log juste pour update ou install un jeu.
-On lance le launcher auth n'est pas obligatoire pour lancer un jeu.
-Creation userAccount par qui ? Non pas besoin de savoir
 
-- Tous les jeux et ( toutes leurs dernieres versions ) ne sont pas installés automatiquement sur les IPAD ce sont les utilisateurs ( admin ) qui le feront. (A CONFIMER)
+Creation userAccount par qui ? Non pas besoin de savoir
 
 chartre de nommage ? minuscule avec _
 
@@ -87,22 +80,17 @@ Connaitre la liste des ipads pour une oganisation? Oui
 trigger : nom prenom email MAJ OU MIN?
 
 verification date de modification apres date de creation ? ( normalement pas besoin avec un trigger timeStamp)
-	"CREATE" | "MODIFY" : Account User + Organisation - attribut
 
 Que veut on comme log OK
-	"CONNECT" : User + Device
-	"INSTALL" : Device + Game + User
+	"CONNECT" "DISCONNECT" : User + Device
+	"CREATE" | "MODIFY" : Account User + Organisation
+	"INSTALL" "UPDATE" : Device + Game + User
+	"ACQUIRE" : Organisation + Game  ? Pas besoin
+	"ASSIGN" : Organisation ° Device
 
-
-TODO
-
-Faire triggers
-Faire procedures stockées
 
 MEMO
-
 qqoqpc
-
 Q 	Qui ? 	De qui, Avec qui, Pour le compte de qui… 	Responsable, acteur, sujet, cible…
 Q 	Quoi ? 	Quoi, Avec quoi, en relation avec quoi… 	Outil, objet, résultat, objectif…
 O 	Où ? 	Où, par où, vers où… 	Lieu, service…
@@ -111,16 +99,3 @@ C 	Comment ? 	de quelle façon, dans quelles conditions, par quel procédé… 	
 C 	Combien ? 	Dans quelle mesure, valeurs en cause, à quelle dose… 	Quantités, budget…
 P 	Pourquoi ? 	Cause, facteur déclenchant 	Justification par les causes qui ont amené à… (la « raison » d'être, la croyance)
 Pour quoi ? 	Motif, finalité, objectif 	Justification par le souhait, l'ambition, la prévision…
-
-26/03/2015
-
-Un device est lié a un compte utilisateur.
-
-Le tokken est généré dans la base par une procedure stockée random + timeStamp
-Si log out or uninstall remove tokken on device
-si changement de mdp génération d'un nouveau tokken
-date de la derniere modification dans Table user
-Pas de table de metadonnée car la recherche d'un instance d'une metadonnée est trop couteuse.
-Au niveau conceptuel la table log ne doit pas etre utilise pour rechercher les liens entre les entités.
-( jointure, memoire, si le log devien tres gros aussi)
-L'ID du log doit etre incrementé et ne doit pas dépendre de clés étrangères ( conception )
