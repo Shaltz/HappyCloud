@@ -1,70 +1,64 @@
 DROP FUNCTION IF EXISTS "functionTest"();
-CREATE OR REPLACE FUNCTION "functionTest"() RETURNS VOID AS $body$
-BEGIN
-
-raise notice 'je fais une procedure stockée';
-
-END;
-$body$ language 'plpgsql';
-
-
-DROP FUNCTION IF EXISTS "isAUser"(varchar,varchar,varchar);
-CREATE OR REPLACE FUNCTION "isAUser"(varchar,varchar,varchar) RETURNS text
-AS $body$
-	DECLARE result int;
-  			isValid boolean;
+CREATE FUNCTION "functionTest"() RETURNS VOID AS $functionTest$
 	BEGIN
-		IF $1 NOTNULL THEN
-			SELECT "ID_User" FROM "User" WHERE "User"."authentication_tokken" = $1 INTO result;
-
-		ELSE IF $2 & $3
-			SELECT "ID_User" FROM "User" WHERE "User"."email_user" = $2 AND "User"."password" = $3 INTO result;
-
-		ELSE
-			result := null;
-
-		END IF;
+		RAISE notice 'je fais une procedure stockée';
+	END;
+$functionTest$ language 'plpgsql';
 
 
-		IF result NOTNULL THEN
+DROP FUNCTION IF EXISTS "isAUser"(tokken varchar,email varchar,password varchar);
+CREATE FUNCTION "isAUser"(varchar,varchar,varchar) RETURNS text
 
-  			INSERT INTO "Log"("type_log","FK_ID_User") VALUES('CONNECT',result);
-			RAISE notice '%',result;
+	AS $isAUser$
+		DECLARE result int;
+	  			isValid boolean;
+		BEGIN
+			IF tokken IS NOT NULL THEN
+				SELECT "ID_User" FROM "User" WHERE "User"."authentication_tokken" = tokken INTO result;
 
-			IF $1 NOTNULL THEN
-  				RETURN result;
-
-  			ELSE IF $2 & $3
-  				RETURN (SELECT "authentication_tokken" FROM "User" where "ID_User" = result);
+			ELSE IF email & password
+				SELECT "ID_User" FROM "User" WHERE "User"."email_user" = email AND "User"."password" = password INTO result;
 
 			ELSE
-	  			RETURN null;
+				result := null;
 
-	  		END IF;
+			END IF;
 
-	  	ELSE
-	  		RAISE warning 'Their is an error %', result;
 
-		END IF;
+			IF result IS NOT NULL THEN
 
-	END;
-$body$ language 'plpgsql';
+	  			INSERT INTO "Log"("type_log","FK_ID_User") VALUES('CONNECT',result);
+				RAISE notice '%',result;
+
+				IF tokken NOTNULL THEN
+	  				RETURN result;
+
+	  			ELSE IF email & password
+	  				RETURN (SELECT "authentication_tokken" FROM "User" where "ID_User" = result);
+
+				ELSE
+		  			RETURN null;
+
+		  		END IF;
+
+		  	ELSE
+		  		RAISE warning 'Their is an error %', result;
+
+			END IF;
+
+		END;
+$isAUser$ language 'plpgsql';
 -- http://dba.stackexchange.com/questions/1883/how-do-i-install-pgcrypto-for-postgresql-in-ubuntu-server
 -- phpass -> nodeJS (hashage/sallage/crypto)
 
-
-DROP FUNCTION IF EXiSTS "createTokken"();
-CREATE OR REPLACE FUNCTION "createTokken"() RETURNS varchar AS $body$
-BEGIN
-
-END;
-$body$ language 'plpgsql';
-
 DROP FUNCTION IF EXiSTS "user_assign_games"(int);
-CREATE OR REPLACE FUNCTION "user_assign_games"(int) RETURNS text
-AS $body$
-BEGIN
-	RETURN SELECT * FROM "Assign" where "Assign".ID_User = $1;
-END;
-$body$ language 'plpgsql';
+CREATE FUNCTION "user_assign_games"(int) RETURNS text
+	AS $user_assign_games$
+		BEGIN
+			RETURN SELECT * FROM "Assign" where "Assign".ID_User = $1;
+		END;
+$user_assign_games$ language 'plpgsql';
 
+
+
+CREATE OR REPLACE FUNCTION ""

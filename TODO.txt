@@ -1,9 +1,23 @@
 TODO
+
+Patrice :
 FAIRE Le Generateur de tokken avec random + timeStamptz
 METTRE le tokken en unique ID
 
-FAIRE triggers use create modify
-FAIRE procedures stockées log, log connect, log install, auth with tokken
+PE :
+FAIRE triggers ->
+					ecrire dans log quand user est modifier
+
+FAIRE procedures ->
+					stockées log, log connect, log install, auth with tokken
+					log1stStep(parametre necessaire) appelle log2ndStep avec parametres
+					procedure d ecriture dans logg pour :
+						CONNECTED ecrire dans log quand user se connecte (via login/pwd ou tokken)
+						CREATED ecrire dans log quand user est creer
+						INSTALLED game by user
+						DELETED game from device
+
 
 DONE
 FAIRE triggers modification d'un user ou organisation account
+FAIRE une verification du tokken dans la procedure stockée "authentication".
