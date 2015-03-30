@@ -21,24 +21,13 @@ CREATE FUNCTION "isAUser"(tokken varchar,email varchar,password varchar) RETURNS
 			ELSE IF email & password
 
 				SELECT "ID_User" FROM "User" WHERE "User"."email" = email AND "User"."password" = crypt(password, "User"."password") INTO result;
-
-				IF verifPwd IS TRUE THEN
-					SELECT "ID_User" FROM "User" WHERE "User"."email" = email AND "User"."password" = password INTO result;
-				ELSE
-					result := null;
-
-
-
-
-
-
 			ELSE
 				result := null;
 
 			END IF;
 
 
-			IF result IS NOT NULL THEN
+			IF result IS NOT NULL & result IS NOT '' THEN
 
 	  			INSERT INTO "Log"("type_log","FK_ID_User") VALUES('CONNECT',result);
 				RAISE notice '%',result;
