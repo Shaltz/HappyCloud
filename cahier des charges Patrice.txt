@@ -124,3 +124,4 @@ Pas de table de metadonnée car la recherche d'un instance d'une metadonnée est
 Au niveau conceptuel la table log ne doit pas etre utilise pour rechercher les liens entre les entités.
 ( jointure, memoire, si le log devien tres gros aussi)
 L'ID du log doit etre incrementé et ne doit pas dépendre de clés étrangères ( conception )
+- L'administrateur de la plateforme peut assigner un jeu à tel ou tel compte.
