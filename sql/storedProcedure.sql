@@ -7,17 +7,30 @@ $functionTest$ language 'plpgsql';
 
 
 DROP FUNCTION IF EXISTS "isAUser"(tokken varchar,email varchar,password varchar);
-CREATE FUNCTION "isAUser"(varchar,varchar,varchar) RETURNS text
+CREATE FUNCTION "isAUser"(tokken varchar,email varchar,password varchar) RETURNS text
 
 	AS $isAUser$
 		DECLARE result int;
 	  			isValid boolean;
+	  			pswhash boolean;
+	  			verifPwd boolean;
 		BEGIN
 			IF tokken IS NOT NULL THEN
 				SELECT "ID_User" FROM "User" WHERE "User"."authentication_tokken" = tokken INTO result;
 
 			ELSE IF email & password
-				SELECT "ID_User" FROM "User" WHERE "User"."email_user" = email AND "User"."password" = password INTO result;
+
+				SELECT "ID_User" FROM "User" WHERE "User"."email" = email AND "User"."password" = crypt(password, "User"."password") INTO result;
+
+				IF verifPwd IS TRUE THEN
+					SELECT "ID_User" FROM "User" WHERE "User"."email" = email AND "User"."password" = password INTO result;
+				ELSE
+					result := null;
+
+
+
+
+
 
 			ELSE
 				result := null;
