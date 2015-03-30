@@ -1,0 +1,9 @@
+TODO
+FAIRE Le Generateur de tokken avec random + timeStamptz
+METTRE le tokken en unique ID
+
+FAIRE triggers use create modify
+FAIRE procedures stockées log, log connect, log install, auth with tokken
+
+DONE
+FAIRE triggers modification d'un user ou organisation account
