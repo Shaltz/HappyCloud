@@ -17,17 +17,16 @@ FOR EACH ROW EXECUTE PROCEDURE user_modification();
 
 
 --- A FINIR
-DROP FUNCTION IF EXISTS user_usage() CASCADE;
-CREATE FUNCTION user_usage() RETURNS TRIGGER AS $$
+DROP FUNCTION IF EXISTS hash_pwd_Proc() CASCADE;
+CREATE FUNCTION hash_pwd_Proc() RETURNS TRIGGER AS $$
 	BEGIN
-
-
-
+		NEW."password" := crypt(NEW."password", gen_salt('MD5'));
+		RETURN NEW;
 	END;
 $$ language 'plpgsql';
 
 
 --- A FINIR
-DROP TRIGGER IF EXISTS log_user_uses_device ON "Use";
-CREATE TRIGGER log_user_uses_device AFTER UPDATE ON "Use"
-FOR EACH ROW EXECUTE PROCEDURE user_usage();
+DROP TRIGGER IF EXISTS hash_pwd ON "Use";
+CREATE TRIGGER hash_pwd BEFORE INSERT OR UPDATE ON "User"
+FOR EACH ROW EXECUTE PROCEDURE hash_pwd_Proc();

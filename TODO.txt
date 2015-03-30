@@ -6,7 +6,7 @@ METTRE le tokken en unique ID
 
 PE :
 FAIRE triggers ->
-					ecrire dans log quand user est modifier
+					hash du password
 
 FAIRE procedures ->
 					stockées log, log connect, log install, auth with tokken
