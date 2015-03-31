@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS public."Device" CASCADE;
 DROP TYPE IF EXISTS public."Type_Log" CASCADE;
 DROP TYPE IF EXISTS public."Type_Access" CASCADE;
 
-CREATE TYPE public."Type_Log" AS ENUM ('CONNECT','CREATE','DISCONNECT','DELETE','INSTALL','MODIFY');
+CREATE TYPE public."Type_Log" AS ENUM ('CREATE','DELETE','INSTALL');
 CREATE TYPE public."Type_Access" AS ENUM ('ADMIN','USER');
 
 CREATE TABLE IF NOT EXISTS public."Organisation"(
@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS public."Log"(
 	"ID_Log" SERIAL PRIMARY KEY,
 	"date_log"  timeStamptz DEFAULT current_timestamp NOT NULL,
 	"type_log" "Type_Log" NOT NULL,
+	"FK_ID_User" INT NULL DEFAULT NULL,
 	"FK_ID_Game" INT NULL DEFAULT NULL,
-	"FK_ID_Device" varchar(50)  NULL DEFAULT NULL,
-	"FK_ID_User" INT NULL DEFAULT NULL
+	"FK_ID_Device" varchar(50)  NULL DEFAULT NULL
 );
 
 ALTER TABLE public."Log" ADD CONSTRAINT "FK_ID_Game_Log" FOREIGN KEY ("FK_ID_Game") REFERENCES public."Game"("ID_Game");

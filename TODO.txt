@@ -10,8 +10,8 @@ FAIRE procedures ->
 					procedure d ecriture dans logg pour :
 						-- CONNECTED ecrire dans log quand user se connecte (via login/pwd ou tokken)
 						-- CREATED ecrire dans log quand user est creer
-						INSTALLED game by user
-						?? DELETED game from device
+						-- INSTALLED game by user
+						-- DELETED game from device
 
 
 DONE

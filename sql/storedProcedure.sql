@@ -60,47 +60,47 @@ $user_assign_games$ language 'plpgsql';
 
 
 
-CREATE OR REPLACE FUNCTION "logInstall"(ID_User integer, ID_Game integer, ID_Device integer)
+CREATE OR REPLACE FUNCTION "logInstall"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
 	AS $logInstall$
 		BEGIN
-			IF ID_User IS NOT NULL AND ID_Game IS NOT NULL AND ID_Device IS NOT NULL AND
+			IF ID_User IS NOT NULL AND ID_Game IS NOT NULL AND ID_Device IS NOT NULL THEN
 				PERFORM "writeToLog"(ID_User, ID_Game, ID_Device, 'INSTALL');
 			ELSE
-				RAISE EXCEPTION 'Erreur d\'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logInstall!';
+				RAISE EXCEPTION "Erreur d'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logInstall !";
 			END IF;
 		END;
 
-$logInstall$ language 'plpgsql'
+$logInstall$ language 'plpgsql';
 
 
-CREATE OR REPLACE FUNCTION "logDelete"(ID_User integer, ID_Game integer, ID_Device integer)
+CREATE OR REPLACE FUNCTION "logDelete"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
 	AS $logDelete$
 		BEGIN
-			IF ID_User IS NOT NULL AND ID_Game IS NOT NULL AND ID_Device IS NOT NULL AND
+			IF ID_User IS NOT NULL AND ID_Game IS NOT NULL AND ID_Device IS NOT NULL THEN
 				PERFORM "writeToLog"(ID_User, ID_Game, ID_Device, 'DELETE');
 			ELSE
-				RAISE EXCEPTION 'Erreur d\'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logDelete!';
+				RAISE EXCEPTION "Erreur d'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logDelete !";
 			END IF;
 		END;
 
-$logDelete$ language 'plpgsql'
+$logDelete$ language 'plpgsql';
 
 
-CREATE OR REPLACE FUNCTION "logConnect"(ID_User integer)
+CREATE OR REPLACE FUNCTION "logConnect"(ID_User integer) RETURNS void
 	AS $logConnect$
 		BEGIN
-			IF ID_User IS NOT NULL
+			IF ID_User IS NOT NULL THEN
 				PERFORM "writeToLog"(ID_User, null, null, 'CONNECT');
 			ELSE
-				RAISE EXCEPTION 'Erreur d\'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logConnect!';
+				RAISE EXCEPTION "Erreur d'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logConnect !";
 			END IF;
 		END;
 
-$logConnect$ language 'plpgsql'
+$logConnect$ language 'plpgsql';
 
 
 
-CREATE OR REPLACE FUNCTION "writeToLog"(ID_User integer, ID_Game integer, ID_Device integer, action "typeActivity")
+CREATE OR REPLACE FUNCTION "writeToLog"(ID_User integer, ID_Game integer, ID_Device varchar(50), action "typeActivity") RETURNS void
 	AS $writeToLog$
 		BEGIN
 			INSERT INTO "Log"
@@ -109,11 +109,29 @@ CREATE OR REPLACE FUNCTION "writeToLog"(ID_User integer, ID_Game integer, ID_Dev
 				current_timestamp,
 				action,
 				ID_User,
-				ID_Device,
-				ID_GAME
+				ID_Game,
+				ID_Device
 				);
 		END;
 
-$writeToLog$ language 'plpgsql'
+$writeToLog$ language 'plpgsql';
+
+
+
+CREATE OR REPLACE FUNCTION "deleteGame"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
+	AS $deleteGame$
+		DECLARE
+			result timestamptz;
+		BEGIN
+			SELECT date_install FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device INTO result;
+				IF result IS NOT NULL THEN
+					DELETE FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device;
+					PERFORM "logDelete"(ID_User, ID_Game, ID_Device);
+				ELSE
+					RAISE EXCEPTION "This game hasn't been installed on this device !";
+				END IF;
+		END;
+
+$deleteGame$ language 'plpgsql';
 
 
