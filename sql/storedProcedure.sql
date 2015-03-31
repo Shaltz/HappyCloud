@@ -131,7 +131,7 @@ CREATE OR REPLACE FUNCTION "deleteGame"(ID_User integer, ID_Game integer, ID_Dev
 					DELETE FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device;
 					PERFORM "logDelete"(ID_User, ID_Game, ID_Device);
 				ELSE
-					RAISE EXCEPTION 'Ce jeux ne peut être désinstaller ! Vérifier que vous ayez les droits d accès à ce jeu et que ce jeux est bien installer';
+					RAISE EXCEPTION 'Ce jeux ne peut être désinstallé ! Vérifier que vous ayez les droits d accès à ce jeu et que ce jeux est bien installé';
 				END IF;
 		END;
 
