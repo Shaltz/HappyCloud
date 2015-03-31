@@ -1,23 +1,23 @@
 TODO
 
 Patrice :
-FAIRE Le Generateur de tokken avec random + timeStamptz
-METTRE le tokken en unique ID
 
 PE :
-FAIRE triggers ->
-					hash du password
 
 FAIRE procedures ->
 					stockées log, log connect, log install, auth with tokken
 					log1stStep(parametre necessaire) appelle log2ndStep avec parametres
 					procedure d ecriture dans logg pour :
-						CONNECTED ecrire dans log quand user se connecte (via login/pwd ou tokken)
-						CREATED ecrire dans log quand user est creer
+						-- CONNECTED ecrire dans log quand user se connecte (via login/pwd ou tokken)
+						-- CREATED ecrire dans log quand user est creer
 						INSTALLED game by user
-						DELETED game from device
+						?? DELETED game from device
 
 
 DONE
+FAIRE Le Generateur de tokken avec random + timeStamptz
+METTRE le tokken en unique ID
+FAIRE triggers ->
+					hash du password
 FAIRE triggers modification d'un user ou organisation account
 FAIRE une verification du tokken dans la procedure stockée "authentication".

@@ -1,10 +1,10 @@
-﻿-- Databbase POSTGRESQL
+-- Databbase POSTGRESQL
 
 DROP TABLE IF EXISTS public."Log" CASCADE;
-DROP TABLE IF EXISTS public."Utilize" CASCADE;
+DROP TABLE IF EXISTS public."Use" CASCADE;
 DROP TABLE IF EXISTS public."Install" CASCADE;
 DROP TABLE IF EXISTS public."Assign" CASCADE;
-DROP TABLE IF EXISTS public."UserAccount" CASCADE;
+DROP TABLE IF EXISTS public."User" CASCADE;
 DROP TABLE IF EXISTS public."Organisation" CASCADE;
 DROP TABLE IF EXISTS public."Game" CASCADE;
 DROP TABLE IF EXISTS public."Device" CASCADE;
@@ -23,18 +23,18 @@ CREATE TABLE IF NOT EXISTS public."Organisation"(
 	"last_modified" timeStamptz NULL
 );
 
-CREATE TABLE IF NOT EXISTS public."UserAccount"(
+CREATE TABLE IF NOT EXISTS public."User"(
 	"ID_User" SERIAL PRIMARY KEY,
 	"FK_ID_Organisation" INT NULL,
 	"display_name" varchar(50) NOT NULL,
-	"email_user" varchar(50) UNIQUE NOT NULL,
+	"email" varchar(50) UNIQUE NOT NULL,
 	"password" varchar(50) NOT NULL,
-	"authentication_tokken" varchar(50) DEFAULT 'NIY' NOT NULL,
+	"authentication_tokken" varchar(100) UNIQUE NULL,
 	"role" "Type_Access" NOT NULL,
 	"created" timeStamptz DEFAULT current_timestamp NOT NULL,
 	"last_modified" timestamptz NULL,
 	"active"  boolean NOT NULL DEFAULT TRUE,
-	CONSTRAINT "FK_ID_Organisation_UserAccount" FOREIGN KEY ("FK_ID_Organisation") REFERENCES public."Organisation"("ID_Organisation")
+	CONSTRAINT "FK_ID_Organisation_User" FOREIGN KEY ("FK_ID_Organisation") REFERENCES public."Organisation"("ID_Organisation")
 );
 
 CREATE TABLE IF NOT EXISTS public."Game"(
@@ -54,11 +54,11 @@ CREATE TABLE IF NOT EXISTS public."Device"(
 	"active" boolean DEFAULT TRUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public."Utilize"(
-	"FK_ID_User" int NOT NULL REFERENCES public."UserAccount"("ID_User"),
+CREATE TABLE IF NOT EXISTS public."Use"(
+	"FK_ID_User" int NOT NULL REFERENCES public."User"("ID_User"),
 	"FK_ID_Device" varchar(50) NOT NULL REFERENCES public."Device"("ID_Device"),
 	"date_autorisation" timeStamptz DEFAULT current_timestamp NOT NULL,
-	CONSTRAINT "PK_Utilize" PRIMARY KEY ("FK_ID_User","FK_ID_Device")
+	CONSTRAINT "PK_Use" PRIMARY KEY ("FK_ID_User","FK_ID_Device")
 
 );
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS public."Install"(
 );
 
 CREATE TABLE IF NOT EXISTS public."Assign"(
-	"FK_ID_User" int NOT NULL REFERENCES public."UserAccount"("ID_User"),
+	"FK_ID_User" int NOT NULL REFERENCES public."User"("ID_User"),
 	"FK_ID_Game" int NOT NULL REFERENCES public."Game"("ID_Game"),
 	"date_assign" timeStamptz DEFAULT current_timestamp NOT NULL,
 	CONSTRAINT "PK_Assign" PRIMARY KEY ("FK_ID_User","FK_ID_Game")
@@ -87,4 +87,4 @@ CREATE TABLE IF NOT EXISTS public."Log"(
 
 ALTER TABLE public."Log" ADD CONSTRAINT "FK_ID_Game_Log" FOREIGN KEY ("FK_ID_Game") REFERENCES public."Game"("ID_Game");
 ALTER TABLE public."Log" ADD CONSTRAINT "FK_ID_Device_Log" FOREIGN KEY ("FK_ID_Device") REFERENCES public."Device"("ID_Device");
-ALTER TABLE public."Log" ADD CONSTRAINT "FK_ID_User_Log" FOREIGN KEY ("FK_ID_User") REFERENCES public."UserAccount"("ID_User");
+ALTER TABLE public."Log" ADD CONSTRAINT "FK_ID_User_Log" FOREIGN KEY ("FK_ID_User") REFERENCES public."User"("ID_User");

@@ -1,26 +1,14 @@
-DROP FUNCTION IF EXISTS "createTokken"();
-CREATE OR REPLACE FUNCTION "createTokken"() RETURNS varchar(32) AS $body$
-DECLARE
-	key varchar(50);
-BEGIN
-	raise notice '% %',random(), now();
-	--key := 1000 * random() || now();
-	key := (cast random() as text) || now();
-	RETURN md5(key);
-END;
-$body$ language 'plpgsql';
+CREATE TABLE testusers(username varchar(100) PRIMARY KEY, cryptpwd text, md5pwd text);
+INSERT INTO testusers(username, cryptpwd, md5pwd)
+    VALUES ('robby', crypt('test', gen_salt('md5')), md5('test')),
+        ('artoo', crypt('test',gen_salt('md5')), md5('test'));
 
-DROP FUNCTION IF EXISTS "functionTest"();
-CREATE OR REPLACE FUNCTION "functionTest"() RETURNS VOID AS $body$
-BEGIN
-	raise notice 'je fais une procedure stockée';
-END;
-$body$ language 'plpgsql';
+SELECT username, cryptpwd, md5pwd
+    FROM testusers;
 
-do $$
-BEGIN
-	raise notice '%', "createTokken"();
+-- successful login
+ --SELECT username  FROM testusers WHERE username = 'robby' AND cryptpwd = crypt('test', cryptpwd);
+ SELECT display_name,password = crypt('pass3', password)
+    FROM "User";
 
-END;
-$$ language 'plpgsql';
-
+SELECT "isValidUser"(null,'patricepetit@hotmail.com','pass1');
