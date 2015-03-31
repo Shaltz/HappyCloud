@@ -121,14 +121,17 @@ $writeToLog$ language 'plpgsql';
 CREATE OR REPLACE FUNCTION "deleteGame"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
 	AS $deleteGame$
 		DECLARE
-			result timestamptz;
+			dateInstalled timestamptz;
+			dateAssigned timestamptz;
 		BEGIN
-			SELECT date_install FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device INTO result;
-				IF result IS NOT NULL THEN
+			SELECT date_install FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device INTO dateInstalled;
+			SELECT date_assign FROM "Assign" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_User" = ID_User INTO dateAssigned;
+
+				IF dateInstalled IS NOT NULL AND dateAssign IS NOT NULL THEN
 					DELETE FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device;
 					PERFORM "logDelete"(ID_User, ID_Game, ID_Device);
 				ELSE
-					RAISE EXCEPTION "This game hasn't been installed on this device !";
+					RAISE EXCEPTION 'Ce jeux ne peut être désinstaller ! Vérifier que vous ayez les droits d accès à ce jeu et que ce jeux est bien installer';
 				END IF;
 		END;
 
