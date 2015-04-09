@@ -18,9 +18,9 @@ VALUES  ('DUPONT','DUPONT@hotmail.com','pass3','USER');
 
 
 INSERT INTO "Device" ("ID_Device","name")
-VALUES  ('00000002', 'ipad');
+VALUES  ('a2', 'ipad');
 INSERT INTO "Device" ("ID_Device","name")
-VALUES  ('00000001', 'ipad');
+VALUES  ('a1', 'ipad');
 
 INSERT INTO "Game" ("shortName", display_name, version, path, "metaData")
 VALUES ('iquizzVendome', 'iquizzVendome','1.0.1', 'game/iquizz', 'toto');
@@ -36,3 +36,11 @@ INSERT INTO "Game" ("shortName", display_name, version, path, "metaData")
 VALUES ('irallyeChateau2', 'irallyeChateau2','1.0.1', 'game/iquizz', 'toto');
 INSERT INTO "Game" ("shortName", display_name, version, path, "metaData")
 VALUES ('irallyeChateau2', 'irallyeChateau2','1.0.2', 'game/iquizz', 'toto');
+
+
+INSERT INTO "Install"
+VALUES(1,'a1',DEFAULT);
+INSERT INTO "Assign"
+VALUES(1,1,DEFAULT);
+INSERT INTO "Assign"
+VALUES(2,2,DEFAULT);

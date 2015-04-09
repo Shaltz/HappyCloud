@@ -1,4 +1,4 @@
-\i createTable.sql
-\i trigger.sql
-\i storedProcedure.sql
-\i insertTable.sql
+\i ./sql/createTable.sql
+\i ./sql/storedProcedure.sql
+\i ./sql/trigger.sql
+\i ./sql/insertTable.sql

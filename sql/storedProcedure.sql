@@ -6,6 +6,7 @@ CREATE FUNCTION "functionTest"() RETURNS VOID AS $functionTest$
 $functionTest$ language 'plpgsql';
 
 
+
 CREATE OR REPLACE FUNCTION "create_tokken"() RETURNS varchar(100) AS $create_tokken$
 	DECLARE
 		key varchar(100);
@@ -16,13 +17,13 @@ CREATE OR REPLACE FUNCTION "create_tokken"() RETURNS varchar(100) AS $create_tok
 $create_tokken$ language 'plpgsql';
 
 
+
 DROP FUNCTION IF EXISTS "isValidUser"(argtokken varchar,argemail varchar,argpassword varchar);
 CREATE FUNCTION "isValidUser"(argtokken varchar,argemail varchar,argpassword varchar) RETURNS text AS $isValidUser$
 		DECLARE result int;
 			tokken text;
 		BEGIN
 			IF argtokken IS NOT NULL THEN
-
 				SELECT "ID_User", "authentication_tokken" FROM "User" WHERE "User"."authentication_tokken" = argtokken INTO result,tokken;
 
 			ELSEIF argemail IS NOT NULL AND argpassword IS NOT NULL THEN
@@ -38,8 +39,6 @@ CREATE FUNCTION "isValidUser"(argtokken varchar,argemail varchar,argpassword var
 
 			IF result IS NOT NULL THEN
 
-	  	-- 		INSERT INTO "Log"("type_log","FK_ID_User") VALUES('CONNECT',result);
-				-- RAISE notice '%',result;
 				PERFORM "logConnect"(result);
 
 			END IF;
@@ -60,39 +59,39 @@ $user_assign_games$ language 'plpgsql';
 
 
 
-CREATE OR REPLACE FUNCTION "logInstall"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
+CREATE OR REPLACE FUNCTION "logInstall"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS VOID
 	AS $logInstall$
 		BEGIN
 			IF ID_User IS NOT NULL AND ID_Game IS NOT NULL AND ID_Device IS NOT NULL THEN
 				PERFORM "writeToLog"(ID_User, ID_Game, ID_Device, 'INSTALL');
 			ELSE
-				RAISE EXCEPTION "Erreur d'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logInstall !";
+				RAISE EXCEPTION 'Erreur d écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logInstall !';
 			END IF;
 		END;
 
 $logInstall$ language 'plpgsql';
 
 
-CREATE OR REPLACE FUNCTION "logDelete"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
+CREATE OR REPLACE FUNCTION "logDelete"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS VOID
 	AS $logDelete$
 		BEGIN
 			IF ID_User IS NOT NULL AND ID_Game IS NOT NULL AND ID_Device IS NOT NULL THEN
 				PERFORM "writeToLog"(ID_User, ID_Game, ID_Device, 'DELETE');
 			ELSE
-				RAISE EXCEPTION "Erreur d'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logDelete !";
+				RAISE EXCEPTION 'Erreur d écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logDelete !';
 			END IF;
 		END;
 
 $logDelete$ language 'plpgsql';
 
 
-CREATE OR REPLACE FUNCTION "logConnect"(ID_User integer) RETURNS void
+CREATE OR REPLACE FUNCTION "logConnect"(ID_User integer) RETURNS VOID
 	AS $logConnect$
 		BEGIN
 			IF ID_User IS NOT NULL THEN
 				PERFORM "writeToLog"(ID_User, null, null, 'CONNECT');
 			ELSE
-				RAISE EXCEPTION "Erreur d'écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logConnect !";
+				RAISE EXCEPTION 'Erreur d écriture dans les logs ! Il manque un ou plusieurs arguments pour executer logConnect !';
 			END IF;
 		END;
 
@@ -100,7 +99,7 @@ $logConnect$ language 'plpgsql';
 
 
 
-CREATE OR REPLACE FUNCTION "writeToLog"(ID_User integer, ID_Game integer, ID_Device varchar(50), action "typeActivity") RETURNS void
+CREATE OR REPLACE FUNCTION "writeToLog"(ID_User integer, ID_Game integer, ID_Device varchar(50), action "Type_Log") RETURNS VOID
 	AS $writeToLog$
 		BEGIN
 			INSERT INTO "Log"
@@ -116,9 +115,7 @@ CREATE OR REPLACE FUNCTION "writeToLog"(ID_User integer, ID_Game integer, ID_Dev
 
 $writeToLog$ language 'plpgsql';
 
-
-
-CREATE OR REPLACE FUNCTION "installGame"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
+CREATE OR REPLACE FUNCTION "installedGame"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
 	AS $installGame$
 		DECLARE
 			dateInstalled timestamptz;
@@ -127,7 +124,7 @@ CREATE OR REPLACE FUNCTION "installGame"(ID_User integer, ID_Game integer, ID_De
 			SELECT date_install FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device INTO dateInstalled;
 			SELECT date_assign FROM "Assign" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_User" = ID_User INTO dateAssigned;
 
-				IF dateInstalled IS NULL AND dateAssign IS NOT NULL THEN
+				IF dateInstalled IS NULL AND dateAssigned IS NOT NULL THEN
 					INSERT INTO "Install"
 					VALUES ( ID_Game,
 							 ID_Device,
@@ -141,7 +138,6 @@ CREATE OR REPLACE FUNCTION "installGame"(ID_User integer, ID_Game integer, ID_De
 $installGame$ language 'plpgsql';
 
 
-
 CREATE OR REPLACE FUNCTION "deleteGame"(ID_User integer, ID_Game integer, ID_Device varchar(50)) RETURNS void
 	AS $deleteGame$
 		DECLARE
@@ -151,14 +147,12 @@ CREATE OR REPLACE FUNCTION "deleteGame"(ID_User integer, ID_Game integer, ID_Dev
 			SELECT date_install FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device INTO dateInstalled;
 			SELECT date_assign FROM "Assign" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_User" = ID_User INTO dateAssigned;
 
-				IF dateInstalled IS NOT NULL AND dateAssign IS NOT NULL THEN
+				IF dateInstalled IS NOT NULL AND dateAssigned IS NOT NULL THEN
 					DELETE FROM "Install" WHERE "FK_ID_Game" = ID_Game AND "FK_ID_Device" = ID_Device;
 					PERFORM "logDelete"(ID_User, ID_Game, ID_Device);
 				ELSE
-					RAISE EXCEPTION 'Ce jeu ne peut être désinstallé ! Vérifier que vous ayez les droits d''accès à ce jeu et que ce jeu est bien installé';
+					RAISE EXCEPTION 'Ce jeu ne peut être désinstallé ! Vérifiez que vous ayez les droits d accès à ce jeu et que ce jeu est bien installé';
 				END IF;
 		END;
 
 $deleteGame$ language 'plpgsql';
-
-
